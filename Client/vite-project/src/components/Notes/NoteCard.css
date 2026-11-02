@@ -1,0 +1,44 @@
+.note-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(58,46,39,0.1);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  min-height: 120px;
+}
+
+.note-image img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  display: block;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.note-content { padding: 16px; }
+
+.note-title { margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.02rem; color: #3A2E27; }
+.note-body { margin: 0; white-space: pre-wrap; line-height: 1.35; font-size: 0.95rem; color: #3A2E27; }
+
+.edit-title { width: 100%; border: none; font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 8px; background: transparent; outline: none; color: #3A2E27 }
+.edit-body { width: 100%; border: none; resize: vertical; min-height: 60px; background: transparent; outline: none; color: #3A2E27 }
+
+.note-actions {
+  border-top: 1px solid rgba(58,46,39,0.1);
+  padding: 6px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.6);
+}
+
+.actions-left { display: flex; gap: 8px; align-items: center; }
+.action-btn { background: transparent; border: none; padding: 6px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #3A2E27 }
+.action-btn:hover { color: #C1673D; background: rgba(193,103,61,0.04); }
+
+.palette-wrapper { position: relative; }
+.swatches-pop { position: absolute; bottom: 36px; left: 0; display: flex; gap: 6px; padding: 6px; background: rgba(255,255,255,0.95); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.swatch { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.06); cursor: pointer; }

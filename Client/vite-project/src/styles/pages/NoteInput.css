@@ -1,0 +1,24 @@
+@import "../variables.css";
+
+.note-input-wrapper{display:flex;justify-content:center;padding:6px 18px}
+.note-input-card{width:100%;max-width:760px;border:1px solid var(--color-surface-container-highest);border-radius:10px;background:var(--color-surface-container-low);transition:all 180ms ease;overflow:hidden}
+.note-input-card.collapsed{height:48px;padding:6px}
+.note-input-card.expanded{padding:12px;height:auto;box-shadow:0 8px 24px rgba(58,46,39,0.08)}
+
+.note-placeholder{width:100%;border:0;background:transparent;padding:10px 8px;font-size:14px;color:var(--color-on-surface);cursor:text}
+.note-title{width:100%;border:0;background:transparent;padding:6px 8px;font-size:16px;font-family:'Playfair Display',serif;font-weight:600;color:var(--color-on-surface);margin-bottom:6px}
+.note-body{width:100%;border:0;background:transparent;padding:6px 8px;font-size:14px;color:var(--color-on-surface);resize:vertical}
+
+.image-preview{margin-top:8px}
+.image-preview img{max-width:120px;max-height:80px;border-radius:6px;border:1px solid var(--color-surface-container-high)}
+
+.note-toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.left-tools{display:flex;align-items:center;gap:8px}
+.color-picker{position:relative}
+.color-btn{background:transparent;border:0;cursor:pointer;padding:6px}
+.swatches{display:flex;gap:6px;margin-left:8px}
+.swatch{width:20px;height:20px;border-radius:4px;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+.icon-btn{background:transparent;border:0;cursor:pointer;padding:6px}
+.close-btn{background:transparent;border:0;color:var(--color-secondary);cursor:pointer;padding:6px 10px;border-radius:6px}
+
+@media (max-width:760px){.note-input-card{max-width:100%}}

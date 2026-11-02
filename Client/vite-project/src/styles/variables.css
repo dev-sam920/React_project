@@ -1,0 +1,27 @@
+:root {
+	--color-surface: #fff8f6;
+	--color-on-surface: #211a18;
+	--color-surface-container-lowest: #ffffff;
+	--color-surface-container-low: #fff1ed;
+	--color-surface-container: #f9ebe7;
+	--color-surface-container-high: #f3e5e2;
+	--color-surface-container-highest: #ede0dc;
+	--color-primary: #316342;
+	--color-primary-container: #4a7c59;
+	--color-secondary: #825516;
+	--color-secondary-container: #fec178;
+	--color-outline: #717971;
+	--color-on-surface-variant: #414942;
+	--shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+	--shadow-md: 0 8px 20px rgba(0,0,0,0.08);
+	--radius-xl: 12px;
+	--radius-lg: 8px;
+	--gutter-mobile: 16px;
+	--space-xl: 32px;
+	--space-md: 16px;
+	--font-body: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* small reset to make pages consistent */
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font-body); }
