@@ -11,13 +11,33 @@ export async function createNote(formData) {
   return response.data;
 }
 
-export async function getNotes() {
+export async function getNotes(view = 'notes') {
   const token = localStorage.getItem('token');
   const headers = {
     Authorization: token ? `Bearer ${token}` : undefined,
   };
 
-  const response = await api.get('/notes', { headers });
+  const response = await api.get(`/notes?view=${encodeURIComponent(view)}`, { headers });
+  return response.data;
+}
+
+export async function updateNote(id, updates) {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: token ? `Bearer ${token}` : undefined,
+  };
+
+  const response = await api.put(`/notes/${id}`, updates, { headers });
+  return response.data;
+}
+
+export async function deleteNote(id) {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: token ? `Bearer ${token}` : undefined,
+  };
+
+  const response = await api.delete(`/notes/${id}`, { headers });
   return response.data;
 }
 
@@ -34,5 +54,5 @@ export async function uploadImage(file) {
   return response.data; // { secure_url, public_id }
 }
 
-export default { createNote, getNotes };
+export default { createNote, getNotes, updateNote, deleteNote };
 // Placeholder: note-related API calls

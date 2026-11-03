@@ -1,0 +1,120 @@
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(58,46,39,0.45);
+  animation: confirm-modal-fade-in 0.2s ease both;
+}
+
+.confirm-modal {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  border-radius: 12px;
+  background: #FFF8F1;
+  box-shadow: 0 16px 48px rgba(35,25,20,0.28);
+  text-align: center;
+  animation: confirm-modal-scale-in 0.2s ease both;
+}
+
+.confirm-modal-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.confirm-modal-danger .confirm-modal-icon {
+  color: #B3402A;
+  background: rgba(179,64,42,0.12);
+}
+
+.confirm-modal-default .confirm-modal-icon {
+  color: #8A6B50;
+  background: rgba(216,196,176,0.45);
+}
+
+.confirm-modal-title {
+  margin: 0 0 8px;
+  color: #3A2E27;
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.confirm-modal-message {
+  margin: 0;
+  color: #796B61;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.confirm-modal-error {
+  margin: 14px 0 0;
+  color: #B3402A;
+  font-size: 13px;
+  text-align: left;
+}
+
+.confirm-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.confirm-modal-buttons button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-modal-cancel {
+  color: #6D5B4E;
+  background: transparent;
+}
+
+.confirm-modal-cancel:hover:not(:disabled) {
+  background: rgba(58,46,39,0.06);
+}
+
+.confirm-modal-confirm {
+  color: #FFF8F1;
+  background: #C1673D;
+}
+
+.confirm-modal-danger .confirm-modal-confirm {
+  background: #B3402A;
+}
+
+.confirm-modal-confirm:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
+.confirm-modal-buttons button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@keyframes confirm-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes confirm-modal-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -1,131 +1,120 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Archive, Edit3, Palette, RotateCcw, Trash2 } from 'lucide-react';
 import './NoteCard.css';
-import { Edit3, Trash2, Archive, Palette } from 'lucide-react';
 
-export default function NoteCard({ note, onUpdate, onDelete, onArchive }) {
-	const { _id, title: initialTitle, body: initialBody, color, imageUrl } = note;
-	const [editing, setEditing] = useState(false);
-	const [title, setTitle] = useState(initialTitle || '');
-	const [body, setBody] = useState(initialBody || '');
+const palette = [
+	['#FFF8F1', 'cream'],
+	['#C1673D', 'terracotta'],
+	['#6B7A4F', 'olive'],
+	['#F0DFAF', 'mustard'],
+	['#8FA8A3', 'dusty teal'],
+	['#D9A5A0', 'faded rose'],
+];
+
+export default function NoteCard({
+	note,
+	view = 'notes',
+	onEdit,
+	onDelete,
+	onArchive,
+	onUnarchive,
+	onRestore,
+	onDeleteForever,
+	onColorChange,
+}) {
 	const [showSwatches, setShowSwatches] = useState(false);
-
-	const wrapperRef = useRef(null);
-
-	useEffect(() => {
-		setTitle(initialTitle || '');
-		setBody(initialBody || '');
-	}, [initialTitle, initialBody]);
-
-	useEffect(() => {
-		function handleDocClick(e) {
-			if (editing && wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-				handleSave();
-			}
-		}
-		document.addEventListener('mousedown', handleDocClick);
-		return () => document.removeEventListener('mousedown', handleDocClick);
-	}, [editing, title, body]);
-
-	const handleSave = () => {
-		setEditing(false);
-		if ((title !== initialTitle) || (body !== initialBody)) {
-			if (typeof onUpdate === 'function') onUpdate(_id, { title, body });
-		}
-	};
-
-	const handleDelete = () => {
-		if (!window.confirm('Delete this note?')) return;
-		if (typeof onDelete === 'function') onDelete(_id);
-	};
-
-	const handleArchive = () => {
-		if (typeof onArchive === 'function') onArchive(_id);
-	};
-
-	const palette = [
-		['#FFFBF5', 'cream'],
-		['#C1673D', 'terracotta'],
-		['#6B7A4F', 'olive'],
-		['#F0DFAF', 'mustard'],
-		['#8DA6A0', 'teal'],
-		['#D9A3A1', 'rose'],
-	];
-
-	const cardStyle = {
-		background: color || '#FFF8F1',
-		border: color ? 'none' : '1px solid #D8C4B0',
-		borderRadius: 8,
-	};
+	const { _id, title, body, color, imageUrl } = note;
 
 	return (
-		<article className="note-card" style={cardStyle} ref={wrapperRef}>
+		<article
+			className="note-card"
+			style={{ backgroundColor: color || '#FFF8F1', border: color ? 'none' : undefined }}
+		>
 			{imageUrl && (
 				<div className="note-image">
 					<img src={imageUrl} alt="note" />
 				</div>
 			)}
 
-			<div className="note-content" onClick={() => setEditing(true)}>
-				{editing ? (
-					<input className="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-				) : (
-					<h3 className="note-title">{title}</h3>
-				)}
-
-				{editing ? (
-					<textarea className="edit-body" value={body} onChange={(e) => setBody(e.target.value)} />
-				) : (
-					<p className="note-body">{body}</p>
-				)}
+			<div
+				className="note-content"
+				onClick={() => {
+					if (view !== 'bin' && typeof onEdit === 'function') onEdit(note);
+				}}
+				role={view !== 'bin' ? 'button' : undefined}
+				tabIndex={view !== 'bin' ? 0 : undefined}
+				onKeyDown={(event) => {
+					if (view !== 'bin' && (event.key === 'Enter' || event.key === ' ')) {
+						event.preventDefault();
+						if (typeof onEdit === 'function') onEdit(note);
+					}
+				}}
+			>
+				{title && <h3 className="note-title">{title}</h3>}
+				{body && <p className="note-body">{body}</p>}
 			</div>
 
-			<div className="note-actions">
-				<div className="actions-left">
-					<button
-						className="action-btn"
-						title="Edit"
-						onClick={(e) => { e.stopPropagation(); setEditing(true); }}
-					>
-						<Edit3 size={16} />
-					</button>
-
-					<button
-						className="action-btn"
-						title="Delete"
-						onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-					>
-						<Trash2 size={16} />
-					</button>
-
-					<button
-						className="action-btn"
-						title="Archive"
-						onClick={(e) => { e.stopPropagation(); handleArchive(); }}
-					>
-						<Archive size={16} />
-					</button>
-
-					<div className="palette-wrapper">
-						<button
-							className="action-btn"
-							title="Color"
-							onClick={(e) => { e.stopPropagation(); setShowSwatches((s) => !s); }}
-						>
-							<Palette size={16} />
-						</button>
-						{showSwatches && (
-							<div className="swatches-pop" onClick={(e) => e.stopPropagation()}>
-								{palette.map((p) => (
-									<button
-										key={p[0]}
-										className="swatch"
-										style={{ background: p[0] }}
-										onClick={() => { if (typeof onUpdate === 'function') onUpdate(_id, { color: p[0] }); setShowSwatches(false); }}
-									/>
-								))}
-							</div>
-						)}
+			<div className="note-actions" onClick={(event) => event.stopPropagation()}>
+				{view !== 'bin' && showSwatches && (
+					<div className="swatches-row">
+						{palette.map(([swatchColor, name]) => (
+							<button
+								key={swatchColor}
+								className="swatch"
+								type="button"
+								title={name}
+								aria-label={`Change color to ${name}`}
+								style={{ backgroundColor: swatchColor }}
+								onClick={() => {
+									if (typeof onColorChange === 'function') onColorChange(_id, swatchColor);
+									setShowSwatches(false);
+								}}
+							/>
+						))}
 					</div>
+				)}
+				<div className="actions-left">
+					{view === 'bin' ? (
+						<>
+							<button className="action-btn" type="button" title="Restore" onClick={() => {
+								if (typeof onRestore === 'function') onRestore(note);
+							}}>
+								<RotateCcw size={18} />
+							</button>
+							<button className="action-btn" type="button" title="Delete forever" onClick={() => {
+								if (typeof onDeleteForever === 'function') onDeleteForever(note);
+							}}>
+								<Trash2 size={18} />
+							</button>
+						</>
+					) : (
+						<>
+							<button className="action-btn" type="button" title="Edit" onClick={() => {
+								if (typeof onEdit === 'function') onEdit(note);
+							}}>
+								<Edit3 size={18} />
+							</button>
+							<button className="action-btn" type="button" title="Delete" onClick={() => {
+								if (typeof onDelete === 'function') onDelete(note);
+							}}>
+								<Trash2 size={18} />
+							</button>
+							<button className="action-btn" type="button" title={view === 'archive' ? 'Unarchive' : 'Archive'} onClick={() => {
+								const handler = view === 'archive' ? onUnarchive : onArchive;
+								if (typeof handler === 'function') handler(note);
+							}}>
+								<Archive size={18} />
+							</button>
+							<button
+								className="action-btn"
+								type="button"
+								title="Change color"
+								onClick={() => setShowSwatches((visible) => !visible)}
+							>
+								<Palette size={18} />
+							</button>
+						</>
+					)}
 				</div>
 			</div>
 		</article>

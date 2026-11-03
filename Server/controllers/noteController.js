@@ -86,7 +86,7 @@ exports.deleteNote = async (req, res) => {
 			}
 		}
 
-		await Note.deleteOne({ _id: id });
+		await Note.deleteOne({ _id: req.params.id, user: req.user.id });
 		return res.json({ message: 'Note deleted' });
 	} catch (err) {
 		console.error(err);
