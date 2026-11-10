@@ -27,7 +27,7 @@ exports.createNote = async (req, res) => {
 			imageUrl,
 			imagePublicId,
 		});
-
+ 
 		console.log('created note:', note);
 
 		return res.status(201).json(note);
