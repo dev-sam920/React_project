@@ -38,7 +38,7 @@ export default function NoteInput({ onNoteCreated }) {
       reader.onload = (ev) => setImagePreviewUrl(ev.target.result);
       reader.readAsDataURL(f);
 
-      // upload immediately
+     
       (async () => {
         try {
           setUploadingImage(true);
@@ -199,4 +199,4 @@ export default function NoteInput({ onNoteCreated }) {
     </div>
   );
 }
-// Placeholder: component for creating a new note
+

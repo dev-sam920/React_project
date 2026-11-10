@@ -1,1 +1,0 @@
-// Placeholder: authentication context provider

@@ -238,4 +238,4 @@ export default function NotesPage({ view = "notes" }) {
     </div>
   );
 }
-// Placeholder: Notes page displaying user's notes
+

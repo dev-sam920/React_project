@@ -6,7 +6,7 @@ export async function createNote(formData) {
     Authorization: token ? `Bearer ${token}` : undefined,
   };
 
-  // Let the browser/axios set the Content-Type (with boundary) for multipart/form-data
+
   const response = await api.post('/notes', formData, { headers });
   return response.data;
 }
@@ -55,4 +55,4 @@ export async function uploadImage(file) {
 }
 
 export default { createNote, getNotes, updateNote, deleteNote };
-// Placeholder: note-related API calls
+

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
 const mongoose = require('mongoose');
 
 const authRoutes = require('./routes/authRoutes');
@@ -10,21 +9,56 @@ const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
+const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
 
-app.use(cors());
+  await mongoose.connect(process.env.MONGO_URI || '');
+};
+
+const allowedOrigins = [
+  process.env.CLIENT_URL?.replace(/\/$/, ''),
+  'http://localhost:5173',
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.use(express.json());
 
 
-connectDB();
+app.get('/', async (req, res) => {
+  try {
+    await connectDB();
+    res.json({
+      status: 'ok',
+      message: 'Keepy API is running',
+      database: 'connected',
+    });
+  } catch (err) {
+    let message = err.message;
+    const connectionString = process.env.MONGO_URI;
 
+    if (connectionString) {
+      message = message.split(connectionString).join('[REDACTED]');
+    }
 
+    message = message.replace(/mongodb(?:\+srv)?:\/\/\S+/gi, '[REDACTED]');
 
-app.get('/', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'Keepy API is running',
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'not connected',
-  });
+    res.status(500).json({
+      status: 'error',
+      database: 'not connected',
+      reason: `${err.name}: ${message}`,
+    });
+  }
 });
 
 
