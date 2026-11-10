@@ -2,20 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const connectDB = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
-
-const connectDB = async () => {
-  if (mongoose.connection.readyState === 1) {
-    return;
-  }
-
-  await mongoose.connect(process.env.MONGO_URI || '');
-};
 
 const allowedOrigins = [
   process.env.CLIENT_URL?.replace(/\/$/, ''),
@@ -34,31 +27,22 @@ app.use(
 );
 app.use(express.json());
 
-
-app.get('/', async (req, res) => {
+app.use(async (req, res, next) => {
   try {
     await connectDB();
-    res.json({
-      status: 'ok',
-      message: 'Keepy API is running',
-      database: 'connected',
-    });
+    next();
   } catch (err) {
-    let message = err.message;
-    const connectionString = process.env.MONGO_URI;
-
-    if (connectionString) {
-      message = message.split(connectionString).join('[REDACTED]');
-    }
-
-    message = message.replace(/mongodb(?:\+srv)?:\/\/\S+/gi, '[REDACTED]');
-
-    res.status(500).json({
-      status: 'error',
-      database: 'not connected',
-      reason: `${err.name}: ${message}`,
-    });
+    console.error('DB connection failed:', err.name, err.message);
+    res.status(503).json({ message: 'Database unavailable, please try again.' });
   }
+});
+
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Keepy API is running',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'not connected',
+  });
 });
 
 
@@ -67,8 +51,10 @@ app.use('/api/notes', noteRoutes);
 app.use('/api/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
